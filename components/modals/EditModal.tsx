@@ -8,6 +8,7 @@ import useUser from "@/hooks/useUser";
 
 import Input from "../Input";
 import Modal from "../Modal";
+import ImageUpload from "../ImageUpload";
 
 
 const EditModal = () => {
@@ -49,6 +50,18 @@ const EditModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
+      <ImageUpload
+        value={profileImage}
+        disabled={isLoading}
+        onChange={(image) => setProfileImage(image)}
+        label="Upload Profile image"
+      />
+      <ImageUpload
+        value={coverImage}
+        disabled={isLoading}
+        onChange={(image) => setCoverImage(image)}
+        label="Upload Cover image"
+      />
       <Input
         placeholder="Name"
         onChange={(e) => setName(e.target.value)}
