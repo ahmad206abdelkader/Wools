@@ -2,10 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import prisma from '@/libs/prismadb';
 import serverAuth from "@/libs/serverAuth";
+import { BadRequestError, sendApiError } from "@/libs/apiErrors";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST' && req.method !== 'DELETE') {
-    return res.status(405).end();
+    res.setHeader('Allow', ['POST', 'DELETE']);
+    res.status(405).end();
+    return;
   }
 
   try {
@@ -14,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { currentUser } = await serverAuth(req, res);
 
     if (!postId || typeof postId !== 'string') {
-      throw new Error('Invalid ID');
+      throw new BadRequestError('Invalid post ID');
     }
 
     const post = await prisma.post.findUnique({
@@ -24,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!post) {
-      throw new Error('Invalid ID');
+      throw new BadRequestError('Post not found');
     }
 
     let updatedLikedIds = [...(post.likedIds || [])];
@@ -76,9 +79,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
 
-    return res.status(200).json(updatedPost);
+    res.status(200).json(updatedPost);
   } catch (error) {
-    console.log(error);
-    return res.status(400).end();
+    sendApiError(res, error, `${req.method} /api/like failed`);
   }
 }

@@ -2,10 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import serverAuth from "@/libs/serverAuth";
 import prisma from "@/libs/prismadb";
+import { BadRequestError, sendApiError } from "@/libs/apiErrors";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).end();
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end();
+    return;
   }
 
   try {
@@ -14,6 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { currentUser } = await serverAuth(req, res);
       const { body } = req.body;
 
+      if (!body || typeof body !== 'string') {
+        throw new BadRequestError('A post body is required');
+      }
+
       const post = await prisma.post.create({
         data: {
           body,
@@ -21,13 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       });
 
-      return res.status(200).json(post);
+      res.status(200).json(post);
+      return;
     }
 
     if (req.method === 'GET') {
       const { userId } = req.query;
-
-      console.log({ userId })
 
       let posts;
 
@@ -56,10 +62,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       }
 
-      return res.status(200).json(posts);
+      res.status(200).json(posts);
+      return;
     }
   } catch (error) {
-    console.log(error);
-    return res.status(400).end();
+    sendApiError(res, error, `${req.method} /api/posts failed`);
   }
 }

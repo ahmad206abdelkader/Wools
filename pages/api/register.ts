@@ -2,14 +2,21 @@ import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from "next";
 
 import prisma from '@/libs/prismadb';
+import { BadRequestError, sendApiError } from '@/libs/apiErrors';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return res.status(405).end();
+    res.setHeader('Allow', 'POST');
+    res.status(405).end();
+    return;
   }
 
   try {
     const { email, username, name, password } = req.body;
+
+    if (!email || !username || !name || !password) {
+      throw new BadRequestError('All fields are required');
+    }
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -22,9 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
 
-    return res.status(200).json(user);
+    res.status(200).json(user);
   } catch (error) {
-    console.log(error);
-    return res.status(400).end();
+    sendApiError(res, error, 'POST /api/register failed');
   }
 }

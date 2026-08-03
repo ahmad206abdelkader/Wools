@@ -31,8 +31,8 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
 
 
   return ( 
-    <div className="border-b-[1px] border-neutral-800 pb-4">
-      <div className="flex justify-end p-2">
+    <section className="border-b border-[#242a31] pb-5">
+      <div className="flex min-h-[72px] justify-end p-3 sm:p-4">
         {currentUser?.id === userId ? (
           <Button secondary label="Edit" onClick={editModal.onOpen} />
         ) : (
@@ -44,17 +44,17 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
           />
         )}
       </div>
-      <div className="mt-8 px-4">
+      <div className="mt-2 px-4 sm:px-5">
         <div className="flex flex-col">
-          <p className="text-white text-2xl font-semibold">
+          <h2 className="text-2xl font-bold tracking-[-0.02em] text-white">
             {fetchedUser?.name}
-          </p>
-          <p className="text-md text-neutral-500">
+          </h2>
+          <p className="text-sm text-[#71808e]">
             @{fetchedUser?.username}
           </p>
         </div>
-        <div className="flex flex-col mt-4">
-          <p className="text-white">
+        <div className="mt-5 flex flex-col">
+          <p className="whitespace-pre-wrap text-[15px] leading-6 text-slate-100">
             {fetchedUser?.bio}
           </p>
           <div 
@@ -64,26 +64,26 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
               items-center 
               gap-2 
               mt-4 
-              text-neutral-500
+              text-[#71808e]
           ">
-            <BiCalendar size={24} />
-            <p>
+            <BiCalendar size={19} aria-hidden="true" />
+            <p className="text-sm">
               Joined {createdAt}
             </p>
           </div>
         </div>
-        <div className="flex flex-row items-center mt-4 gap-6">
-          <div className="flex flex-row items-center gap-1">
-            <p className="text-white">{fetchedUser?.followingIds?.length}</p>
-            <p className="text-neutral-500">Following</p>
+        <div className="mt-5 flex items-center gap-6 text-sm">
+          <div className="flex items-center gap-1.5">
+            <p className="font-semibold text-white">{fetchedUser?.followingIds?.length}</p>
+            <p className="text-[#71808e]">Following</p>
           </div>
-          <div className="flex flex-row items-center gap-1">
-            <p className="text-white">{fetchedUser?.followersCount || 0}</p>
-            <p className="text-neutral-500">Followers</p>
+          <div className="flex items-center gap-1.5">
+            <p className="font-semibold text-white">{fetchedUser?.followersCount || 0}</p>
+            <p className="text-[#71808e]">Followers</p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
    );
 }
  

@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import PageHeader from "@/components/layout/PageHeader";
 import NotificationsFeed from "@/components/NotificatinFeed";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { NextPageContext } from "next";
@@ -26,7 +26,7 @@ export async function getServerSideProps(context: NextPageContext) {
 const Notifications = () => {
   return ( 
     <>
-      <Header showBackArrow label="Notifications" />
+      <PageHeader showBackArrow label="Notifications" description="Updates from your community" />
       <NotificationsFeed />
     </>
    );

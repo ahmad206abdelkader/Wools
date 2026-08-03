@@ -56,7 +56,7 @@ const RegisterModal = () => {
   }, [registerModal, email, password, username, name]);
 
   const bodyContent = (
-    <div className=" flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <Input
         placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
@@ -86,14 +86,15 @@ const RegisterModal = () => {
   );
 
   const footerContent = (
-    <div className=" text-neutral-400 text-center mt-4">
-      <p>
-        Already have an account?
-        <span 
+    <div className="mt-3 text-center text-sm text-[#8b98a5]">
+      <p className="flex flex-wrap justify-center gap-1.5">
+        <span>Already have an account?</span>
+        <button
+        type="button"
         onClick={onToggle}
-        className=" text-white cursor-pointer hover:underline">
+        className="cursor-pointer font-semibold text-sky-400 hover:underline">
           Sign in
-        </span>
+        </button>
       </p>
     </div>
   );
@@ -102,8 +103,8 @@ const RegisterModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={registerModal.isOpen}
-      title="Create an acount"
-      actionLabel="register"
+      title="Create your account"
+      actionLabel="Create account"
       onClose={registerModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}

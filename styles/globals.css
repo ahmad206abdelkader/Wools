@@ -2,11 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  @apply h-full bg-black
+:root {
+  color-scheme: dark;
+  --app-background: #080a0d;
+  --card-background: #101419;
+  --card-background-hover: #14191f;
+  --border-color: #242a31;
+  --muted-color: #8b98a5;
+  --accent-color: #2697f3;
 }
 
-body{
-  @apply h-full bg-black
+html {
+  @apply h-full scroll-smooth;
+  background: var(--app-background);
 }
 
+body {
+  @apply min-h-full text-slate-100 antialiased;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(38, 151, 243, 0.09), transparent 34rem),
+    var(--app-background);
+}
+
+* {
+  scrollbar-color: #313944 transparent;
+}
+
+::selection {
+  @apply bg-sky-500/30 text-white;
+}
+
+@layer base {
+  button,
+  a,
+  input,
+  textarea {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080a0d];
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply rounded-2xl border border-[#242a31] bg-[#101419];
+  }
+
+  .muted-copy {
+    @apply text-[#8b98a5];
+  }
+}

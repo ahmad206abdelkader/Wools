@@ -1,5 +1,6 @@
 import serverAuth from "@/libs/serverAuth";
 import prisma from '@/libs/prismadb';
+import { BadRequestError, sendApiError } from '@/libs/apiErrors';
 
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -8,7 +9,9 @@ export default async function handler(
     res: NextApiResponse
 ){
     if(req.method !== 'POST' && req.method !== 'DELETE'){
-        return res.status(405).end();
+        res.setHeader('Allow', ['POST', 'DELETE']);
+        res.status(405).end();
+        return;
     }
 
     try{
@@ -17,7 +20,7 @@ export default async function handler(
         const {currentUser} = await serverAuth(req, res);
 
         if(!userId || typeof userId !== 'string'){
-            throw new Error('Invalid ID');
+            throw new BadRequestError('Invalid user ID');
         }
 
         const user = await prisma.user.findUnique({
@@ -27,7 +30,7 @@ export default async function handler(
         });
 
         if(!user){
-            throw new Error('Inavlid ID');
+            throw new BadRequestError('User not found');
         }
 
         let updatedFollowingIds = [...(user.followingIds || [])];
@@ -69,10 +72,9 @@ export default async function handler(
             }
         });
 
-        return res.status(200).json(updatedUser);
+        res.status(200).json(updatedUser);
 
     }catch(error){
-        console.log(error);
-        return res.status(400).end();
+        sendApiError(res, error, `${req.method} /api/follow failed`);
     }
 }

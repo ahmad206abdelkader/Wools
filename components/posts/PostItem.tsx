@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
-import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { FiMessageCircle } from 'react-icons/fi';
 import { formatDistanceToNowStrict } from 'date-fns';
 
 import useLoginModal from '@/hooks/useLoginModal';
@@ -29,6 +30,17 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     router.push(`/posts/${data.id}`);
   }, [router, data.id]);
 
+  const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      goToPost();
+    }
+  }, [goToPost]);
+
   const onLike = useCallback(async (ev: any) => {
     ev.stopPropagation();
 
@@ -50,86 +62,71 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   }, [data.createdAt])
 
   return (
-    <div 
+    <article
       onClick={goToPost}
-      className="
-        border-b-[1px] 
-        border-neutral-800 
-        p-5 
-        cursor-pointer 
-        hover:bg-neutral-900 
-        transition
-      ">
-      <div className="flex flex-row items-start gap-3">
+      onKeyDown={onKeyDown}
+      role="link"
+      tabIndex={0}
+      aria-label={`Wool by ${data.user.name}`}
+      className="group cursor-pointer border-b border-[#242a31] p-4 transition duration-200 hover:bg-white/[0.025] focus-visible:bg-white/[0.025] sm:p-5">
+      <div className="flex items-start gap-3">
         <Avatar userId={data.user.id} />
-        <div>
-          <div className="flex flex-row items-center gap-2">
-            <p 
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-1.5 text-sm">
+            <button
+              type="button"
               onClick={goToUser} 
-              className="
-                text-white 
-                font-semibold 
-                cursor-pointer 
-                hover:underline
-            ">
+              className="truncate font-semibold text-white hover:underline">
               {data.user.name}
-            </p>
-            <span 
+            </button>
+            <button
+              type="button"
               onClick={goToUser} 
-              className="
-                text-neutral-500
-                cursor-pointer
-                hover:underline
-                hidden
-                md:block
-            ">
+              className="hidden truncate text-[#71808e] hover:underline sm:block">
               @{data.user.username}
-            </span>
-            <span className="text-neutral-500 text-sm">
-              {createdAt}
+            </button>
+            <span className="shrink-0 text-[#52606d]" aria-hidden="true">·</span>
+            <span className="shrink-0 text-xs text-[#71808e]">
+              {createdAt ? `${createdAt} ago` : ''}
             </span>
           </div>
-          <div className="text-white mt-1">
+          <div className="mt-1.5 whitespace-pre-wrap break-words text-[15px] leading-6 text-slate-100">
             {data.body}
           </div>
-          <div className="flex flex-row items-center mt-3 gap-10">
-            <div 
-              className="
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-sky-500
-            ">
-              <AiOutlineMessage size={20} />
-              <p>
+          <div className="mt-4 flex items-center gap-8 sm:gap-12">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                goToPost();
+              }}
+              className="group/action flex items-center gap-2 text-xs text-[#71808e] transition hover:text-sky-400"
+              aria-label={`${data.comments?.length || 0} comments`}
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-full transition group-hover/action:bg-sky-400/10">
+                <FiMessageCircle size={17} aria-hidden="true" />
+              </span>
+              <span>
                 {data.comments?.length || 0}
-              </p>
-            </div>
-            <div
+              </span>
+            </button>
+            <button
+              type="button"
               onClick={onLike}
-              className="
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-red-500
-            ">
-              <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
-              <p>
+              className={`group/action flex items-center gap-2 text-xs transition ${hasLiked ? 'text-rose-400' : 'text-[#71808e] hover:text-rose-400'}`}
+              aria-label={`${hasLiked ? 'Unlike' : 'Like'} this wool. ${data.likedIds.length} likes`}
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-full transition group-hover/action:bg-rose-400/10">
+                <LikeIcon size={18} aria-hidden="true" />
+              </span>
+              <span>
                 {data.likedIds.length}
-              </p>
-            </div>
+              </span>
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 

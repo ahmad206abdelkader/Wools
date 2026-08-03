@@ -1,18 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import serverAuth from '@/libs/serverAuth';
+import { AuthenticationError, sendApiError } from '@/libs/apiErrors';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
-    return res.status(405).end();
+    res.setHeader('Allow', 'GET');
+    res.status(405).end();
+    return;
   }
 
   try {
     const { currentUser } = await serverAuth(req, res);
 
-    return res.status(200).json(currentUser);
+    res.status(200).json(currentUser);
   } catch (error) {
-    console.log(error);
-    return res.status(400).end();
+    if (error instanceof AuthenticationError) {
+      res.status(200).json(null);
+      return;
+    }
+
+    sendApiError(res, error, 'GET /api/current failed');
   }
 }

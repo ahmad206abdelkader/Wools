@@ -45,7 +45,7 @@ const LoginModal = () => {
     },[loginModal, email, password]);
 
     const bodyContent = (
-        <div className=" flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
             <Input
              placeholder="Email"
              onChange={(e) => setEmail(e.target.value)}
@@ -63,14 +63,15 @@ const LoginModal = () => {
     )
 
     const footerContent = (
-        <div className=" text-neutral-400 text-center mt-4">
-          <p>
-            First time using Wools?
-            <span 
+        <div className="mt-3 text-center text-sm text-[#8b98a5]">
+          <p className="flex flex-wrap justify-center gap-1.5">
+            <span>First time using Wools?</span>
+            <button
+            type="button"
             onClick={onToggle}
-            className=" text-white cursor-pointer hover:underline">
+            className="cursor-pointer font-semibold text-sky-400 hover:underline">
               Create an account
-            </span>
+            </button>
           </p>
         </div>
       );
@@ -79,8 +80,8 @@ const LoginModal = () => {
     <Modal 
       disabled={isLoading}
       isOpen={loginModal.isOpen}
-      title="Login"
-      actionLabel="sign in"
+      title="Welcome back"
+      actionLabel="Sign in"
       onClose={loginModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}

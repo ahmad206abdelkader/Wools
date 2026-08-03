@@ -1,3 +1,5 @@
+import { IconType } from "react-icons";
+
 interface ButtonProps {
   label: string;
   secondary?: boolean;
@@ -6,6 +8,8 @@ interface ButtonProps {
   onClick: () => void;
   disabled?: boolean;
   outline?: boolean;
+  icon?: IconType;
+  type?: "button" | "submit";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -16,26 +20,26 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   disabled,
   outline,
+  icon: Icon,
+  type = "button",
 }) => {
+  const appearance = outline
+    ? "border-[#3a444f] bg-transparent text-white hover:border-[#56616d] hover:bg-white/[0.04]"
+    : secondary
+      ? "border-white bg-white text-[#0b0e12] hover:bg-slate-200"
+      : "border-sky-500 bg-gradient-to-r from-sky-500 to-blue-500 text-white hover:from-sky-400 hover:to-blue-400";
+
   return (
     <button
-    disabled={disabled}
-    onClick={onClick}
-      className={` disabled:opacity-70 disabled:cursor-not-allowed rounded-full font-semibold hover:opacity-80 transition border-2 ${
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 rounded-xl border font-semibold shadow-sm transition duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 ${
         fullWidth ? "w-full" : "w-fit"
-      } ${secondary ? "bg-white" : "bg-sky-500"} ${
-        secondary ? "text0-black" : "text-white"
-      } ${secondary ? "border-black" : "border-sky-500"} ${
-        larg ? "text-xl" : "text-md"
-      } 
-      ${larg ? "px-5" : "px-4"}
-      ${larg ? "py-3" : "py-2"}
-      ${outline ? "bg-transparent" : ""}
-      ${outline ? "border-white" : ""}
-      ${outline ? "text-white" : ""}
-      `}
+      } ${larg ? "min-h-[50px] px-6 text-base" : "min-h-[42px] px-5 text-sm"} ${appearance}`}
     >
       {label}
+      {Icon && <Icon size={17} aria-hidden="true" />}
     </button>
   );
 };

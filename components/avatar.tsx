@@ -26,13 +26,17 @@ const Avatar: React.FC<AvatarProps> = ({
     },[router, userId]);
 
     return(
-        <div className={`
-        ${hasBorder ? 'border-4 border-black' : ''} 
-        ${isLarge ? 'h-32' : 'h-12'}
-        ${isLarge ? 'w-32' : 'w-12'}
-        rounded-full
-        hover:opacity-90 transition cursor-pointer relative
-    `}>
+        <button
+          type="button"
+          onClick={onClick}
+          aria-label={`View ${fetchedUser?.name || 'user'} profile`}
+          className={`
+          ${hasBorder ? 'border-4 border-[#0b0e12]' : 'ring-1 ring-white/10'}
+          ${isLarge ? 'h-28 sm:h-32' : 'h-11'}
+          ${isLarge ? 'w-28 sm:w-32' : 'w-11'}
+          relative shrink-0 overflow-hidden rounded-full bg-[#20262d]
+          transition hover:opacity-90
+      `}>
         <Image
          fill
          style={{
@@ -40,10 +44,9 @@ const Avatar: React.FC<AvatarProps> = ({
             borderRadius:'100%'
          }}
          alt='Avatar'
-         onClick={onClick}
          src={fetchedUser?.profileImage || '/images/placeholder.png'}
         />
-    </div>
+    </button>
     )
 }
 

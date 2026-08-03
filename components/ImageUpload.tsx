@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { FiImage, FiUploadCloud } from "react-icons/fi";
 
 interface DropzoneProps {
   onChange: (base64: string) => void;
@@ -11,6 +12,10 @@ interface DropzoneProps {
 
 const ImageUpload: React.FC<DropzoneProps> = ({ onChange, label, value, disabled }) => {
   const [base64, setBase64] = useState(value);
+
+  useEffect(() => {
+    setBase64(value);
+  }, [value]);
 
   const handleChange = useCallback((base64: string) => {
     onChange(base64);
@@ -37,19 +42,36 @@ const ImageUpload: React.FC<DropzoneProps> = ({ onChange, label, value, disabled
   });
 
   return ( 
-    <div {...getRootProps({className: 'w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'})}>
+    <div {...getRootProps({
+      className: `group flex min-h-[112px] w-full cursor-pointer items-center justify-center rounded-2xl border border-dashed border-[#3a444f] bg-[#0d1116] p-4 text-center transition hover:border-sky-400/60 hover:bg-sky-400/[0.03] focus:outline-none focus:ring-2 focus:ring-sky-400 ${disabled ? 'cursor-not-allowed opacity-60' : ''}`,
+      role: 'button',
+      'aria-label': label,
+    })}>
       <input {...getInputProps()} />
       {base64 ? (
-        <div className="flex items-center justify-center">
-          <Image
-            src={base64}
-            height="100"
-            width="100"
-            alt="Uploaded image"
-          />
+        <div className="flex items-center gap-4">
+          <span className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl ring-1 ring-white/10">
+            <Image
+              src={base64}
+              fill
+              sizes="72px"
+              alt="Uploaded image"
+              className="object-cover"
+            />
+          </span>
+          <div className="text-left">
+            <p className="flex items-center gap-2 text-sm font-semibold text-white">
+              <FiImage aria-hidden="true" /> Image selected
+            </p>
+            <p className="mt-1 text-xs text-[#71808e]">Click or drop a file to replace it</p>
+          </div>
         </div>
       ) : (
-        <p className="text-white">{label}</p>
+        <div>
+          <FiUploadCloud className="mx-auto text-sky-400" size={24} aria-hidden="true" />
+          <p className="mt-2 text-sm font-medium text-white">{label}</p>
+          <p className="mt-1 text-xs text-[#71808e]">PNG or JPG</p>
+        </div>
       )}
     </div>
    );

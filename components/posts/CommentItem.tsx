@@ -26,50 +26,34 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
   }, [data.createdAt])
 
   return (
-    <div 
-      className="
-        border-b-[1px] 
-        border-neutral-800 
-        p-5 
-        cursor-pointer 
-        hover:bg-neutral-900 
-        transition
-      ">
-      <div className="flex flex-row items-start gap-3">
+    <article className="border-b border-[#242a31] p-4 transition hover:bg-white/[0.025] sm:p-5">
+      <div className="flex items-start gap-3">
         <Avatar userId={data.user.id} />
-        <div>
-          <div className="flex flex-row items-center gap-2">
-            <p 
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 text-sm">
+            <button
+              type="button"
               onClick={goToUser} 
-              className="
-                text-white 
-                font-semibold 
-                cursor-pointer 
-                hover:underline
-            ">
+              className="truncate font-semibold text-white hover:underline">
               {data.user.name}
-            </p>
-            <span 
+            </button>
+            <button
+              type="button"
               onClick={goToUser} 
-              className="
-                text-neutral-500
-                cursor-pointer
-                hover:underline
-                hidden
-                md:block
-            ">
+              className="hidden truncate text-[#71808e] hover:underline sm:block">
               @{data.user.username}
-            </span>
-            <span className="text-neutral-500 text-sm">
-              {createdAt}
+            </button>
+            <span className="text-[#52606d]" aria-hidden="true">·</span>
+            <span className="shrink-0 text-xs text-[#71808e]">
+              {createdAt ? `${createdAt} ago` : ''}
             </span>
           </div>
-          <div className="text-white mt-1">
+          <div className="mt-1.5 whitespace-pre-wrap break-words text-[15px] leading-6 text-slate-100">
             {data.body}
           </div>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 

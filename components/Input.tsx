@@ -19,8 +19,9 @@ const Input: React.FC<InputProps> = ({
     onChange={onChange}
     value={value}
     placeholder={placeholder}
+    aria-label={placeholder}
     type={type}
-    className="w-full p-4 text-lg bg-black border-2 border-neutral-800 rounded-md outline-none text-white focus:border-sky-500 focus:border-2 transition disabled:bg-neutral-900 disabled:opacity-70 disabled:cursor-not-allowed"
+    className="h-[52px] w-full rounded-xl border border-[#2b333c] bg-[#0d1116] px-4 py-3.5 text-[15px] text-white placeholder:text-[#687582] transition hover:border-[#3a444f] focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 disabled:cursor-not-allowed disabled:opacity-60"
    />
   )
 }
